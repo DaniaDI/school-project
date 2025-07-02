@@ -19,6 +19,7 @@
 
                             @csrf
 
+
                      <div class="modal-body">
                          <div class="modal-container">
                             <input type="hidden" name="id" id="id" value="{{csrf_token()}}">
