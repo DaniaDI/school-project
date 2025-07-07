@@ -9,8 +9,16 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Spatie\SimpleExcel\SimpleExcelReader;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
+use Spatie\SimpleExcel\SimpleExcelWriter;
+
+use function Ramsey\Uuid\v1;
 
 class StudentController extends Controller
 {
@@ -178,25 +186,113 @@ class StudentController extends Controller
             'success' => 'تم تعديل الطالب بنجاح'
         ]);
     }
-    function import(Request $request){
+
+
+    function import(Request $request)
+    {
 
         // dd($request->all());
 
         //  public بدي اخزن الملف داخل ال
 
-
+        // تخزين الملف في المسار الصحيح
         $name = 'ExcelStudent_' . time() . '_' . rand() . '.' . $request->file('excel')
-        ->getClientOriginalExtension();
+            ->getClientOriginalExtension();
         $request->file('excel')->move(public_path('uploads\files\excel'), $name);
 
-       
+
+        $path = public_path('uploads\files\excel') . DIRECTORY_SEPARATOR . $name;
+        //dd($path );
+        //user: email,password || student :------
+
+        //  بتاخد دالة كريت المسار تبع ملف اكسل الي عندي وبعدها عندي دالة تانية بتاخد الصفوف دخل الملف وبتسلم لدالة الي بعدها  هادي دالة 3 بتاخد صف صف وبتستخدم الايري تخزن الصفوف على شكل مضفوفةsimpleclassهنا سمبل هذا كلاس داخل مكتبة
+        SimpleExcelReader::create($path)->getRows()->each(function (array $row) {
+
+            //لو بدي اكتب Valdation
+            // كنا قبل نعمل request->valdation :  هنا ما بينفع لانه الصف بتغير
+           $validator =  Validator::make($row ,[
+                'email' => 'required|email',
+
+             ]);
+
+             if($validator->fails()){ //لو في اي خطا بالايميل  بالتحقق هذا هيظهر هذا الخطا مع الصف الي فيه الخطا
+                 Log::warning(' انا قمت بتجواز هذا السطر بسبب الاخطاء. $row ');
+                 return; // بعدها يتخطى الصف الي بعدها
+             }
 
 
+            // بدي ادور على اليوزر من خلال الايميل
+            $user = User::query()->where('email', $row['email'])->first(); // email in DB = email in excel file =>في الصف الي واقف فيه حاليا هات اول واحد
+            if (!$user) { //  لو اليوزر مش موجود اصلا فانت روح انشألي ياه
+                $password = Str::random(10); // string in 10 char.
+            // add user
+              $user =  User::create([
+                    'email' => $row['email'], //$row['email'] : المسمسى الي دخل الاقواس من هيدر في ملف الاكسل الي عندي
+                    'password' => Hash::make($password),
+                ]);
+            }
 
+            $grade = Grade::query()->where('tag' ,$row['grade'])->first();
+            $section = Section::query()->where('name' ,$row['section'])->first();
+        // add student
+        Student::query()->updateOrCreate(['user_id'=> $user->id],//   لو اليوزر الموجود يحدث لكن لو مش موجود تم انشائه
+        [
+          'first_name'=>$row['first_name'],
+          'last_name'=>$row['last_name'],
+          'parent_name'=>$row['parent_name'],
+          'parent_phone'=>$row['parent_phone'],
+          'date_of_birth'=>$row['date_of_birth'],
+          'gender'=>$row['gender'],
+          'grade_id'=>$grade->id,
+          'section_id'=>$section->id,
 
+        ]);
 
+           // لما تخلص العملية
 
+        return  view('dashboard.students.index');
 
+        });
 
+    }
+///////////////////////////////////////////////////lect 24///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function export(){
+        //  وبعدها انجيب البيانات داخل الطلاب  واضعها داخل ملف الاكسل واخلي اليوزر ينزلها وبعدهالا احذف الملف من الببلك موضوع ترتيب PUBLICبدنا ننشا ملف اكسل داخل
+
+        $dir = public_path('exports');
+        //exports :بدي اتاكد انه موجود او معمول
+        if(!File::exists('exports')){
+           File::makeDirectory($dir , 0755 , true );
+        }//csv =>xsls  بقراه اللاكسل هذا الامتداد
+
+        $path = public_path('exports\students_export_' . time(). '.csv');
+
+        $students =Student::query()->with(['grade','user','section'])->get();
+
+        SimpleExcelWriter::create($path)->addHeader([
+       // name header of file .
+         'First_name',
+         'Last_name',
+         'Parent_name',
+         'Parent_phone',
+         'Gender',
+         'Email',
+         'Date Of Birth',
+         'Grade',
+         'Section',
+        ])->addRows($students->map(function($student){// like for each || map :assoiative array
+           return [
+            $student->first_name,
+            $student->last_name,
+            $student->parent_name,
+            $student->parent_phone,
+            $student->gender,
+            $student->user->email,
+            $student->date_of_birth,
+            $student->grade->name,
+            $student->section->name,
+           ];
+        }));
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 }

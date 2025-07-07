@@ -161,10 +161,14 @@
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="authentication-signup-with-header-footer.html">
-                                        <div class="d-flex align-items-center">
-                                            <div class=""><i class="bi bi-lock-fill"></i></div>
-                                            <div class="ms-3"><span>Logout</span></div>
-                                        </div>
+                                        <form method="post" action="{{route('logout')}}">
+                                            @csrf
+                                            <div class="d-flex align-items-center">
+                                                <div class=""><i class="bi bi-lock-fill"></i></div>
+                                                <button type ="submit "><span>Logout</span></button>
+                                            </div>
+                                        </form>
+
                                     </a>
                                 </li>
                             </ul>
@@ -594,7 +598,7 @@
                         alt="logo icon">
                 </div>
                 <div>
-                    <h4 class="logo-text">Snacked</h4>
+                    <h4 class="logo-text">ONLINESCHOOL</h4>
                 </div>
                 <div class="toggle-icon ms-auto"> <i class="bi bi-list"></i>
                 </div>

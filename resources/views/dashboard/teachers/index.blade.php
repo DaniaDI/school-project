@@ -1,7 +1,7 @@
 @extends('dashboard.master')
 
 @section('title')
-   مدرسة ليرن | الصفحة الرئيسية للمعلمين
+online school   | الصفحة الرئيسية للمعلمين
 @stop
 
 @section('content')

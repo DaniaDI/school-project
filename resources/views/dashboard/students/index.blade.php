@@ -1,7 +1,7 @@
 @extends('dashboard.master')
 
 @section('title')
-    مدرسة ليرن | صفحة المواد
+online school| صفحة الطلاب
 @stop
 
 @section('content')
@@ -283,10 +283,13 @@
                             data-bs-target="#add-model">
                             إضافة طالب جديد
                         </button>
-                        <button class="btn btn-outline-primary col-12  btn-add" data-bs-toggle="modal"
+                        <button class="btn btn-outline-primary col-12 mb-2 btn-add" data-bs-toggle="modal"
                         data-bs-target="#import-model">
                         إضافة عبر الاكسل
                     </button>
+                    <a  href="{{route('dash.student.export')}}" class="btn btn-outline-primary col-12 mb-2 "  >
+                        تصدير اكسل
+                </a>
 
                     </div>
                 </div>

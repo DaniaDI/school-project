@@ -28,7 +28,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        //lect 24
+        $user = Auth::user();// اليوزر الي عمل حاليا تسجيل الدخول
 
+        if($user->teacher){ // اذا عنده تيتشر معناته معلم
+            return redirect()->route('dash.teacher.lecture.index');
+        }
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 

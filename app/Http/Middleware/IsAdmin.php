@@ -18,18 +18,24 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-    //     $user = Auth::user();
-    //     if(!$user || Teacher::where('user_id' , $user->id)||Student::where('user_id' , $user->id)->exists()){
-    //         abort(403 ,' .انت محظور من الصلاحية'); //  abort(403  :دالة للخطا اي ممنوع دخول هذه الصفحة بتاتا
-    //   }
-    //     return $next($request);
-    $user = Auth::user();
+        //     $user = Auth::user();
+        //     if(!$user || Teacher::where('user_id' , $user->id)||Student::where('user_id' , $user->id)->exists()){
+        //         abort(403 ,' .انت محظور من الصلاحية'); //  abort(403  :دالة للخطا اي ممنوع دخول هذه الصفحة بتاتا
+        //   }
+        //     return $next($request);
 
-    if (!$user || $user->role !== 'admin') {
-        abort(403, 'أنت محظور من الصلاحية');
+        // $user = Auth::user();
+
+        // if (!$user || $user->role !== 'admin') {
+        //     abort(403, 'أنت محظور من الصلاحية');
+        // }
+
+        // return $next($request);
+
+
+        if (!auth()->check() || auth()->user()->teacher) {
+            abort(403, 'أنت محظور من الصلاحية');
+        }
+        return $next($request);
     }
-
-    return $next($request);
 }
-    }
-

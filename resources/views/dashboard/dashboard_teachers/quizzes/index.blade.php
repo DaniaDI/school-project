@@ -15,10 +15,11 @@
 
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="stagesModalLabel"> اضافة محاضرة جديد</h5>
+                        <h5 class="modal-title" id="stagesModalLabel"> اضافة كوز جديد</h5>
                         <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="إغلاق"></button>
                     </div>
-                    <form method="post" action="{{ route('dash.lecture.add') }}" id="add-form" class="add-form">
+                    <form method="post" action="{{ route("dash.teacher.quizz.add") }}" id="add-form" class="add-form">
+
                         {{-- form يكون تابت add form --}}
                         <div class="modal-body">
 
@@ -27,7 +28,7 @@
 
 
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
+                                    @csrf
                                 <div class="mb-4 form-group">
                                     <label> عنوان المحاضرة </label>
                                     <input name="title" class="form-control" placeholder="عنوان المحاضرة">
@@ -40,28 +41,6 @@
                                     <div class="invalid-feedback"></div>
                                 </div>
 
-                                <div class="mb-4 form-group">
-                                    <label>المادة الدراسية </label>
-                                    <select name="subject" class="form-control">
-                                        <option selected disabled> اختر المادة الدراسية </option>
-                                        @foreach ($subjects as $s)
-                                            <option value="{{ $s->id }}"> {{ $s->title }} </option>
-                                        @endforeach
-
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-
-                                <div class="mb-4 form-group">
-                                    <label> مدرس المادة</label>
-                                    <select name="teacher" class="form-control">
-                                        <option selected disabled> اختر المدرس </option>
-                                        @foreach ($teachers as $t)
-                                            <option value="{{ $t->id }}"> {{ $t->name }} </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
 
                                 <div class="mb-4 form-group">
                                     <label>رابط المحاضرة</label>
@@ -94,7 +73,7 @@
                         <h5 class="modal-title" id="stagesModalLabel"> تعديل محاضرة</h5>
                         <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="إغلاق"></button>
                     </div>
-                    <form method="post" action="{{ route('dash.lecture.update') }}" id="update-form" class="update-form">
+                    <form method="post" action="{{ route('dash.teacher.lecture.update') }}" id="update-form" class="update-form">
                         {{-- form يكون تابت add form --}}
                         <div class="modal-body">
 
@@ -105,6 +84,7 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="id" id="id">
 
+                                @csrf
 
 
                                 <div class="mb-4 form-group">
@@ -119,28 +99,6 @@
                                     <div class="invalid-feedback"></div>
                                 </div>
 
-                                <div class="mb-4 form-group">
-                                    <label>المادة الدراسية </label>
-                                    <select name="subject" class="form-control">
-                                        <option selected disabled> اختر المادة الدراسية </option>
-                                        @foreach ($subjects as $s)
-                                            <option value="{{ $s->id }}"> {{ $s->title }} </option>
-                                        @endforeach
-
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
-
-                                <div class="mb-4 form-group">
-                                    <label> مدرس المادة</label>
-                                    <select name="teacher" class="form-control">
-                                        <option selected disabled> اختر المدرس </option>
-                                        @foreach ($teachers as $t)
-                                            <option value="{{ $t->id }}"> {{ $t->name }} </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="invalid-feedback"></div>
-                                </div>
 
                                 <div class="mb-4 form-group">
                                     <label>رابط المحاضرة</label>
@@ -166,121 +124,55 @@
 
 
         <!--****************************************lect 21 subjects filter*****************************************-->
-        {{-- <div class="row">
-            <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                <div class="card radius-10 w-100">
-                    <div class="card-header bg-transparent">
-                        <div class="row g-3 align-items-center">
-
-                            <div class="col">
-                                <h5 class="mb-0">جميع المحاضرات</h5>
-                            </div>
-                            <div class="col">
-                                <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <button class="btn btn-primary col-12 btn-add" data-bs-toggle="modal"
-                            data-bs-target="#add-model">
-                            اضافة محاضرة
-                        </button>
-
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-
 
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-12 d-flex">
                 <div class="card radius-10 w-100">
                     <div class="card-header bg-transparent">
-                        <div class="row g-3 align-items-center">
-                            <div class="col">
-                                <h5 class="mb-0">التصفية </h5>
+                              <h5 class="mb-0">انشاء اختبار جديد </h5>
                             </div>
-                            <div class="col">
-                                <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="card-body">
-                        <div class="row mb-3">
+
+                        <form action="{{ route('dash.teacher.quizz.add') }}" method="POST" id="quiz-form">
+                            @csrf
+                        <div class="mb-3">
+                                <label class="form-label">عنوان الاختبار</label>
+                                <input type="text" name="title" class="form-control "
+                                    placeholder="عنوان الاختبار" required>
+                            </div>
+                            <div class="row">
                             <div class="col-md-4 mb-3">
-                                <input type="text" id="search-title-lecture" class="form-control search-input"
-                                    placeholder="عنوان المحاضرة">
+                                <label class="form-label">مدة الاختبار(دقائق)</label>
+                                <input type="number" name="time" class="form-control "
+                                    placeholder="مدة الاختبار" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">تاريخ البدء</label>
+                                <input type="datetime-local" name="start" class="form-control "
+                                    placeholder="تاريخ البدء" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">تاريخ الانتهاء</label>
+                                <input type="datetime-local" name="end" class="form-control "
+                                    placeholder="تاريخ الانتهاء" required>
                             </div>
 
-                            <div class="col-md-4 mb-3">
-                                <input type="text" id="search-name-teacher" class="form-control search-input" placeholder="اسم المعلم">
-                            </div>
                         </div>
-                        <div class="d-flex justify-content-end gap-2 mb-3">
-                            <button type="submit" id="search-btn" class="btn btn-outline-success col-6">بحث</button>
-                            <button type="reset"id="reset-btn" class="btn btn-outline-secondary col-6 ">تنظيف</button>
-                        </div>
+                        <hr>
+                        <div id=questions-container></div>
 
-                        <button class="btn btn-outline-primary col-12 btn-add" data-bs-toggle="modal"
-                            data-bs-target="#add-model">
-                            اضافة محاضرة
-                        </button>
+                        <button  type="submit" class="btn btn-outline-primary col-12  mt-3 "  id="add-question-btn"> اضافة سؤال</button>
 
-                    </div>
+                    <hr>
+
+                        <button type="submit"  class="btn btn-success col-12 ">حفظ الاختبار</button>
+
+                    </form>
                 </div>
                 </div>
                 </div>
             <!--*********************************************************************************-->
-
-            <div class="row">
-                <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                    <div class="card radius-10 w-100">
-                        <div class="card-header bg-transparent">
-                            <div class="row g-3 align-items-center">
-                                <div class="col">
-                                      <h5 class="mb-0">جميع المحاضرات</h5>
-                                </div>
-                                <div class="col">
-                                    <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="datatable" class="table align-middle mb-0 ">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>العنوان</th>
-                                            <th> الوصف </th>
-                                            <th>رابط المحاضرة</th>
-                                            <th>اسم المعلم</th>
-                                            <th>العمليات</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        </div>
-        <!--end row-->
-
-
-
-
 
 
 
@@ -302,11 +194,11 @@
             responsive: true,
 
             ajax: {
-                url: "{{ route('dash.lecture.getdata') }}",
+                url: "{{ route('dash.teacher.lecture.getdata') }}",
                 data: function(n) { // متغير n : name نائب عن
                     //n.subject = $('#search-subject').val();
                     n.title = $('#search-title-lecture').val();
-                    n.teacher = $('#search-name-teacher').val();
+                    n.description = $('#search-description-lecture').val();
                             }
 
 
@@ -342,13 +234,7 @@
                     orderable: true,
                     searchable: true,
                 },
-                {
-                    data: 'teacher',
-                    name: 'teacher',
-                    title: 'اسم المعلم',
-                    orderable: true,
-                    searchable: true,
-                },
+
                 {
                     data: 'action',
                     name: 'action',
@@ -391,23 +277,17 @@
                 var button = $(this); // btn  this click .
                 var id = button.data('id'); //كدا التقتهم  من الكونترور
                 // alert(id);
-                var name = button.data('name');
-                var phone = button.data('phone');
-                var email = button.data('email');
-                var spec = button.data('spec');
+                var title = button.data('title');
+                var description = button.data('description');
+                var link = button.data('link');
                 var status = button.data('status');
 
                 /// inputs in form
                 $('#id').val(id);
-                $('#name').val(name);
-                $('#phone').val(phone);
-                $('#email').val(email);
-                $('#spec').val(spec);
-                $('#qualification').val(qualification);
-                $('#gender').val(gender);
-                $('#hire_date').val(hire_date);
-                $('#date_of_birth').val(date_of_birth);
-                $('#status').val(status);
+                $('#title').val(title);
+                $('#description').val(description);
+                $('#link').val(link);
+
 
 
             });
