@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
     use HasFactory;
-    protected $quarded = [];
+    protected $guarded = [];
 
     public function questions(){
         return $this->hasMany(Question::class);// الكوز عنده اكتر من سؤال

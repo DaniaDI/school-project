@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('quizz_id')->constrained('quizzes')->cascadeOnDelete();
+            $table->foreignId('quiz_id')->constrained('quizzes')->cascadeOnDelete();
             $table->text('text');//question text
             $table->enum('type',['tf','msq']);//اختار نوع الاسئلة اما صح او غلط || اختيار من متعدد
             $table->integer('grade');// علامة السؤال
